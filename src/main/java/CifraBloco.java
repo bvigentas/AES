@@ -52,10 +52,10 @@ public class CifraBloco {
             for (int i = 0; i < 4; i++) {
                 for (int j = 0; j < 4; j++) {
                     if (keyIndex < textoSimples.length) {
-                        matrizEstado[i][j] = textoSimples[keyIndex];
+                        matrizEstado[j][i] = textoSimples[keyIndex];
                         indexCount++;
                     } else {
-                        matrizEstado[i][j] = new Integer(16 - indexCount).byteValue();
+                        matrizEstado[j][i] = new Integer(16 - indexCount).byteValue();
                     }
                     keyIndex++;
                 }
@@ -72,7 +72,7 @@ public class CifraBloco {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[i][j] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(0).getMatrizEstado()[i][j]);
+                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(0).getMatrizEstado()[j][i]);
             }
         }
 
@@ -86,11 +86,11 @@ public class CifraBloco {
 
             for (int j = 0; j < bloco.getMatrizEstado().length; j++) {
 
-                int b = bloco.getMatrizEstado()[i][j];
+                int b = bloco.getMatrizEstado()[j][i];
 
                 try {
                     int sboxEquivalent = SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
-                    bloco.getMatrizEstado()[i][j] = sboxEquivalent;
+                    bloco.getMatrizEstado()[j][i] = sboxEquivalent;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -114,13 +114,13 @@ public class CifraBloco {
             for (int j = 0; j < 4; j++) {
 
                 for (int k = 0; k < i; k++) {
-                    aux[k] = bloco.getMatrizEstado()[i][k];
+                    aux[k] = bloco.getMatrizEstado()[k][i];
                 }
 
-                bloco.getMatrizEstado()[i][0] = bloco.getMatrizEstado()[i][0 + i];
-                bloco.getMatrizEstado()[i][1] = aux.length > 2 ? aux[2] : bloco.getMatrizEstado()[i][1 + i];
-                bloco.getMatrizEstado()[i][2] = aux.length > 1 ? aux[1] : bloco.getMatrizEstado()[i][2 + i];
-                bloco.getMatrizEstado()[i][3] = aux[0];
+                bloco.getMatrizEstado()[0][i] = bloco.getMatrizEstado()[i][i];
+                bloco.getMatrizEstado()[1][i] = aux.length > 2 ? aux[2] : bloco.getMatrizEstado()[1+ i][i];
+                bloco.getMatrizEstado()[2][i] = aux.length > 1 ? aux[1] : bloco.getMatrizEstado()[2+ i][i];
+                bloco.getMatrizEstado()[3][i] = aux[0];
 
             }
         }
@@ -173,7 +173,7 @@ public class CifraBloco {
     private Block etapa05(Block bloco, int round) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[i][j] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(round).getMatrizEstado()[i][j]);
+                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[j][i] ^ keySchedule.get(round).getMatrizEstado()[j][i]);
             }
         }
 
