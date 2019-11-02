@@ -6,6 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class Block {
 
-    private byte[][] matrizEstado;
+    private int[][] matrizEstado;
 
 }

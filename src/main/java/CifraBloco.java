@@ -8,7 +8,7 @@ import java.util.List;
 public class CifraBloco {
 
     @Setter
-    private byte[] textoSimples;
+    private int[] textoSimples;
 
     @Setter
     private KeySchedule keySchedule;
@@ -45,7 +45,7 @@ public class CifraBloco {
         int keyIndex = 0;
 
         while (keyIndex < textoSimples.length) {
-            byte[][] matrizEstado = new byte[4][4];
+            int[][] matrizEstado = new int[4][4];
             int indexCount = 0;
 
 
@@ -72,7 +72,7 @@ public class CifraBloco {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[i][j] = (byte) (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(0).getMatrizEstado()[i][j]);
+                bloco.getMatrizEstado()[i][j] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(0).getMatrizEstado()[i][j]);
             }
         }
 
@@ -86,10 +86,10 @@ public class CifraBloco {
 
             for (int j = 0; j < bloco.getMatrizEstado().length; j++) {
 
-                byte b = bloco.getMatrizEstado()[i][j];
+                int b = bloco.getMatrizEstado()[i][j];
 
                 try {
-                    byte sboxEquivalent = (byte)SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
+                    int sboxEquivalent = SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
                     bloco.getMatrizEstado()[i][j] = sboxEquivalent;
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
@@ -109,7 +109,7 @@ public class CifraBloco {
 
             if (i == 0) continue;
 
-            byte[] aux = new byte[i];
+            int[] aux = new int[i];
 
             for (int j = 0; j < 4; j++) {
 
@@ -130,7 +130,7 @@ public class CifraBloco {
 
     private Block etapa04(Block bloco) {
         //TODO: Validar termos 0 e 1;
-        byte[][] newMatrix = new byte[4][4];
+        int[][] newMatrix = new int[4][4];
 
         for (int i = 0; i < bloco.getMatrizEstado().length; i++) {
             for (int j = 0; j < MultiMatrix.MULTI_MATRIX.length; j++) {
@@ -144,7 +144,7 @@ public class CifraBloco {
                             value = 0xff;
                         }
 
-                        newMatrix[i][j] = (byte) value;
+                        newMatrix[i][j] = value;
 
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
@@ -158,7 +158,7 @@ public class CifraBloco {
         for (int i = 0; i < newMatrix.length; i++) {
             for (int j = 0; j < newMatrix.length; j++) {
                 try {
-                    newMatrix[i][j] = (byte) ETable.getETableEquivalent(((newMatrix[i][j] & 0xf0) >> 4), newMatrix[i][j] & 0x0f);
+                    newMatrix[i][j] = ETable.getETableEquivalent(((newMatrix[i][j] & 0xf0) >> 4), newMatrix[i][j] & 0x0f);
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
@@ -173,7 +173,7 @@ public class CifraBloco {
     private Block etapa05(Block bloco, int round) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[i][j] = (byte) (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(round).getMatrizEstado()[i][j]);
+                bloco.getMatrizEstado()[i][j] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(round).getMatrizEstado()[i][j]);
             }
         }
 

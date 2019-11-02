@@ -6,15 +6,15 @@ import org.apache.commons.codec.binary.Hex;
 @Getter
 public class AES {
 
-    private byte[] key;
+    private int[] key;
 
-    private byte[][] matrizEstado = new byte[4][4];
+    private int[][] matrizEstado = new int[4][4];
 
-    private byte[][] keySchedule = new byte[4][44];
+    private int[][] keySchedule = new int[4][44];
 
-    private byte[][] lastRoundKey;
+    private int[][] lastRoundKey;
 
-    public AES(byte[] key) {
+    public AES(int[] key) {
         this.key = key;
     }
 
@@ -23,9 +23,11 @@ public class AES {
         int keyIndex = 0;
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                matrizEstado[i][j] = key[keyIndex];
+                matrizEstado[j][i] = key[keyIndex];
                 keyIndex++;
             }
         }
+
+        System.out.println("teste");
     }
 }

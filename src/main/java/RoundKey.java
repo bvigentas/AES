@@ -6,19 +6,21 @@ public class RoundKey {
 
     @Getter
     @Setter
-    private byte[][] matrizEstado = new byte[4][4];
+    private int[][] matrizEstado = new int[4][4];
 
     @Setter
-    private byte[][] lastRoundKey;
+    private int[][] lastRoundKey;
 
-    private byte[] newWord;
+    private int[] newWord = new int[4];
 
-    private byte[] roundConstant;
+    private int[] roundConstant;
 
     public void generateRoundKey(int round) {
 
         generateFirstWord(round);
-        matrizEstado[0] = newWord;
+        for (int i = 0; i < 4; i++) {
+            matrizEstado[i][0] = newWord[i];
+        }
         generateOtherWords();
 
     }
@@ -36,28 +38,32 @@ public class RoundKey {
 
     public void generateOtherWords() {
 
-        byte[] newWord = new byte[4];
+        int[] newWord = new int[4];
 
         for (int i = 1; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {
-                newWord[j] = (byte) (lastRoundKey[i][j] ^ matrizEstado[i -1][j]);
+                newWord[j] = (lastRoundKey[j][i] ^ matrizEstado[j][i -1]);
             }
-
-            matrizEstado[i] = newWord;
+            for (int j = 0; j < 4; j++) {
+                matrizEstado[j][i] = newWord[j];
+            }
 
         }
 
     }
 
     private void makeCopy() {
-        newWord = lastRoundKey[3];
+
+        for (int i = 0; i < 4; i++) {
+            newWord[i] = lastRoundKey[i][3];
+        }
 
     }
 
     private void rotWord() {
 
-        byte aux = newWord[0];
+        int aux = newWord[0];
 
         for (int i = 0; i < newWord.length; i++) {
             if (i != newWord.length-1)
@@ -72,10 +78,10 @@ public class RoundKey {
 
         for (int i = 0; i < newWord.length; i++) {
 
-            byte b = newWord[i];
+            int b = newWord[i];
 
             try {
-                byte sboxEquivalent = (byte)SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
+                int sboxEquivalent = SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
                 newWord[i] = sboxEquivalent;
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -94,14 +100,14 @@ public class RoundKey {
     private void makeXorRoundConstant() {
 
         for (int i = 0; i < newWord.length; i++) {
-            newWord[i] = (byte) (newWord[i] ^ roundConstant[i]);
+            newWord[i] = (newWord[i] ^ roundConstant[i]);
         }
 
     }
 
     private void makeXorFirstWordLastRoundKey() {
         for (int i = 0; i < newWord.length; i++) {
-            newWord[i] = (byte) (newWord[i] ^ lastRoundKey[0][i]);
+            newWord[i] = (newWord[i] ^ lastRoundKey[i][0]);
         }
     }
 }
