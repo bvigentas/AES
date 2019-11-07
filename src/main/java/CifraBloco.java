@@ -2,6 +2,7 @@ import lombok.AllArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @AllArgsConstructor
@@ -109,21 +110,18 @@ public class CifraBloco {
 
             if (i == 0) continue;
 
-            int[] aux = new int[i];
+            List<Integer> aux= new ArrayList<Integer>();
 
-            for (int j = 0; j < 4; j++) {
-
-                for (int k = 0; k < i; k++) {
-                    aux[k] = bloco.getMatrizEstado()[k][i];
-                }
-
-                //TODO: Arrumar esta com erro :(
-                bloco.getMatrizEstado()[0][i] = bloco.getMatrizEstado()[i][i];
-                bloco.getMatrizEstado()[1][i] = aux.length > 2 ? aux[2] : bloco.getMatrizEstado()[1+ i][i];
-                bloco.getMatrizEstado()[2][i] = aux.length > 1 ? aux[1] : bloco.getMatrizEstado()[2+ i][i];
-                bloco.getMatrizEstado()[3][i] = aux[0];
-
+            for (int k = 0; k < i; k++) {
+                aux.add(bloco.getMatrizEstado()[i][k]);
             }
+
+            Collections.reverse(aux);
+
+            bloco.getMatrizEstado()[i][0] = bloco.getMatrizEstado()[i][i];
+            bloco.getMatrizEstado()[i][1] = aux.size() > 2 ? aux.get(2) : bloco.getMatrizEstado()[i][1+ i];
+            bloco.getMatrizEstado()[i][2] = aux.size() > 1 ? aux.get(1) : bloco.getMatrizEstado()[i][2+ i];
+            bloco.getMatrizEstado()[i][3] = aux.get(0);
         }
 
         return bloco;
