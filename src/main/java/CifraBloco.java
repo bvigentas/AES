@@ -72,7 +72,7 @@ public class CifraBloco {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[i][j] ^ keySchedule.get(0).getMatrizEstado()[j][i]);
+                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[j][i] ^ keySchedule.get(0).getMatrizEstado()[j][i]);
             }
         }
 
@@ -117,6 +117,7 @@ public class CifraBloco {
                     aux[k] = bloco.getMatrizEstado()[k][i];
                 }
 
+                //TODO: Arrumar esta com erro :(
                 bloco.getMatrizEstado()[0][i] = bloco.getMatrizEstado()[i][i];
                 bloco.getMatrizEstado()[1][i] = aux.length > 2 ? aux[2] : bloco.getMatrizEstado()[1+ i][i];
                 bloco.getMatrizEstado()[2][i] = aux.length > 1 ? aux[1] : bloco.getMatrizEstado()[2+ i][i];
@@ -129,7 +130,6 @@ public class CifraBloco {
     }
 
     private Block etapa04(Block bloco) {
-        //TODO: Validar termos 0 e 1;
         int[][] newMatrix = new int[4][4];
 
         for (int i = 0; i < bloco.getMatrizEstado().length; i++) {
@@ -137,8 +137,21 @@ public class CifraBloco {
                 for (int x = 0; x < bloco.getMatrizEstado().length; x++) {
                     try {
 
-                        int value = (Galois.getGaloisEquivalent(((bloco.getMatrizEstado()[i][x] & 0xf0) >> 4), bloco.getMatrizEstado()[i][x] & 0x0f)
-                            + Galois.getGaloisEquivalent(((MultiMatrix.MULTI_MATRIX[x][j] & 0xf0) >> 4), MultiMatrix.MULTI_MATRIX[x][j] & 0x0f));
+                        int value = 0;
+
+                        if (MultiMatrix.MULTI_MATRIX[x][j] == 1) {
+
+                            value = bloco.getMatrizEstado()[i][x];
+
+                        } else if (bloco.getMatrizEstado()[i][x] == 1) {
+
+                            value = MultiMatrix.MULTI_MATRIX[x][j];
+
+                        } else  if (MultiMatrix.MULTI_MATRIX[x][j] != 0 && bloco.getMatrizEstado()[i][x] != 0) {
+
+                            value = (Galois.getGaloisEquivalent(((bloco.getMatrizEstado()[i][x] & 0xf0) >> 4), bloco.getMatrizEstado()[i][x] & 0x0f)
+                                    + Galois.getGaloisEquivalent(((MultiMatrix.MULTI_MATRIX[x][j] & 0xf0) >> 4), MultiMatrix.MULTI_MATRIX[x][j] & 0x0f));
+                        }
 
                         if (value > 0xff){
                             value = 0xff;

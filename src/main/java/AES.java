@@ -27,7 +27,5 @@ public class AES {
                 keyIndex++;
             }
         }
-
-        System.out.println("teste");
     }
 }
