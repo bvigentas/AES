@@ -43,7 +43,7 @@ public class RoundKey {
         for (int i = 1; i < 4; i++) {
 
             for (int j = 0; j < 4; j++) {
-                newWord[j] = (lastRoundKey[j][i] ^ matrizEstado[j][i -1]);
+                newWord[j] = ByteUtil.xor(lastRoundKey[j][i],matrizEstado[j][i -1]);
             }
             for (int j = 0; j < 4; j++) {
                 matrizEstado[j][i] = newWord[j];
@@ -78,14 +78,8 @@ public class RoundKey {
 
         for (int i = 0; i < newWord.length; i++) {
 
-            int b = newWord[i];
-
-            try {
-                int sboxEquivalent = SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
-                newWord[i] = sboxEquivalent;
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
+            int sboxEquivalent = SBox.get(ByteUtil.getLeftByte(newWord[i]), ByteUtil.getRightByte(newWord[i]));
+            newWord[i] = sboxEquivalent;
 
         }
 
@@ -100,14 +94,14 @@ public class RoundKey {
     private void makeXorRoundConstant() {
 
         for (int i = 0; i < newWord.length; i++) {
-            newWord[i] = (newWord[i] ^ roundConstant[i]);
+            newWord[i] = ByteUtil.xor(newWord[i], roundConstant[i]);
         }
 
     }
 
     private void makeXorFirstWordLastRoundKey() {
         for (int i = 0; i < newWord.length; i++) {
-            newWord[i] = (newWord[i] ^ lastRoundKey[i][0]);
+            newWord[i] = ByteUtil.xor(newWord[i], lastRoundKey[i][0]);
         }
     }
 }

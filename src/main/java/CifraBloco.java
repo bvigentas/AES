@@ -21,18 +21,18 @@ public class CifraBloco {
 
         for (Block bloco: blocos) {
 
-            bloco = etapa01(bloco);
+            bloco = xorMatrix(bloco);
 
             for (int i = 1; i < 10; i++) {
-                bloco = etapa02(bloco);
-                bloco = etapa03(bloco);
-                bloco = etapa04(bloco);
-                bloco = etapa05(bloco, i);
+                bloco = subBytes(bloco);
+                bloco = shiftRows(bloco);
+                bloco = mixColumns(bloco);
+                bloco = addRoundKey(bloco, i);
             }
 
-            bloco = etapa02(bloco);
-            bloco = etapa03(bloco);
-            blocoscifrados.add(etapa05(bloco, 10));
+            bloco = subBytes(bloco);
+            bloco = shiftRows(bloco);
+            blocoscifrados.add(addRoundKey(bloco, 10));
         }
 
         return uniteBlocks(blocoscifrados);
@@ -91,11 +91,11 @@ public class CifraBloco {
 
     }
 
-    private Block etapa01(Block bloco) {
+    private Block xorMatrix(Block bloco) {
 
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[j][i] ^ keySchedule.get(0).getMatrizEstado()[j][i]);
+                bloco.getMatrizEstado()[j][i] = ByteUtil.xor(bloco.getMatrizEstado()[j][i],keySchedule.get(0).getMatrizEstado()[j][i]);
             }
         }
 
@@ -103,20 +103,14 @@ public class CifraBloco {
 
     }
 
-    private Block etapa02(Block bloco) {
+    private Block subBytes(Block bloco) {
 
         for (int i = 0; i < 4; i++) {
 
             for (int j = 0; j < bloco.getMatrizEstado().length; j++) {
 
-                int b = bloco.getMatrizEstado()[j][i];
-
-                try {
-                    int sboxEquivalent = SBox.getSboxEquivalent((b & 0xf0) >> 4, (b & 0x0f));
-                    bloco.getMatrizEstado()[j][i] = sboxEquivalent;
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
+                int sboxEquivalent = SBox.get(ByteUtil.getLeftByte(bloco.getMatrizEstado()[j][i]), ByteUtil.getRightByte(bloco.getMatrizEstado()[j][i]));
+                bloco.getMatrizEstado()[j][i] = sboxEquivalent;
 
             }
 
@@ -126,7 +120,7 @@ public class CifraBloco {
 
     }
 
-    private Block etapa03(Block bloco) {
+    private Block shiftRows(Block bloco) {
 
         for (int i = 0; i < 4; i++) {
 
@@ -149,7 +143,7 @@ public class CifraBloco {
         return bloco;
     }
 
-    private Block etapa04(Block bloco) {
+    private Block mixColumns(Block bloco) {
         int[][] newMatrix = new int[4][4];
 
         for (int i = 0; i < bloco.getMatrizEstado().length; i++) {
@@ -159,6 +153,7 @@ public class CifraBloco {
                 int[] auxToXor = new int[4];
 
                 for (int x = 0; x < bloco.getMatrizEstado().length; x++) {
+
                     try {
 
                         int value = 0;
@@ -173,14 +168,16 @@ public class CifraBloco {
 
                         } else  if (MultiMatrix.MULTI_MATRIX[x][j] != 0 && bloco.getMatrizEstado()[x][i] != 0) {
 
-                            value = (LTable.get(((bloco.getMatrizEstado()[x][i] & 0xf0) >> 4), bloco.getMatrizEstado()[x][i] & 0x0f)
-                                    + LTable.get(((MultiMatrix.MULTI_MATRIX[j][x] & 0xf0) >> 4), MultiMatrix.MULTI_MATRIX[j][x] & 0x0f));
+                            value =  (LTable.get(ByteUtil.getLeftByte(bloco.getMatrizEstado()[x][i]),
+                                                 ByteUtil.getRightByte(bloco.getMatrizEstado()[x][i]))
+                                    + LTable.get(ByteUtil.getLeftByte(MultiMatrix.MULTI_MATRIX[j][x]),
+                                                 ByteUtil.getRightByte(MultiMatrix.MULTI_MATRIX[j][x])));
 
                             if (value > 0xff){
                                 value = value - 0xff;
                             }
 
-                            value = ETable.get(((value & 0xf0) >> 4), value & 0x0f);
+                            value = ETable.get(ByteUtil.getLeftByte(value), ByteUtil.getRightByte(value));
                         }
 
                         auxToXor[x] = value;
@@ -200,10 +197,10 @@ public class CifraBloco {
         return bloco;
     }
 
-    private Block etapa05(Block bloco, int round) {
+    private Block addRoundKey(Block bloco, int round) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-                bloco.getMatrizEstado()[j][i] = (bloco.getMatrizEstado()[j][i] ^ keySchedule.get(round).getMatrizEstado()[j][i]);
+                bloco.getMatrizEstado()[j][i] = ByteUtil.xor(bloco.getMatrizEstado()[j][i], keySchedule.get(round).getMatrizEstado()[j][i]);
             }
         }
 
