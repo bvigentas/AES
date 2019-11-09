@@ -23,11 +23,11 @@ public class CifraBloco {
 
             bloco = etapa01(bloco);
 
-            for (int i = 0; i < 10; i++) {
+            for (int i = 1; i < 10; i++) {
                 bloco = etapa02(bloco);
                 bloco = etapa03(bloco);
                 bloco = etapa04(bloco);
-                bloco = etapa05(bloco, i+1);
+                bloco = etapa05(bloco, i);
             }
 
             bloco = etapa02(bloco);
@@ -131,50 +131,50 @@ public class CifraBloco {
         int[][] newMatrix = new int[4][4];
 
         for (int i = 0; i < bloco.getMatrizEstado().length; i++) {
+
             for (int j = 0; j < MultiMatrix.MULTI_MATRIX.length; j++) {
+
+                int[] auxToXor = new int[4];
+
                 for (int x = 0; x < bloco.getMatrizEstado().length; x++) {
                     try {
 
                         int value = 0;
 
-                        if (MultiMatrix.MULTI_MATRIX[x][j] == 1) {
+                        if (bloco.getMatrizEstado()[x][i] == 1) {
 
-                            value = bloco.getMatrizEstado()[i][x];
+                            value = MultiMatrix.MULTI_MATRIX[j][x];
 
-                        } else if (bloco.getMatrizEstado()[i][x] == 1) {
+                        } else if (MultiMatrix.MULTI_MATRIX[j][x] == 1) {
 
-                            value = MultiMatrix.MULTI_MATRIX[x][j];
+                            value = bloco.getMatrizEstado()[x][i];
 
-                        } else  if (MultiMatrix.MULTI_MATRIX[x][j] != 0 && bloco.getMatrizEstado()[i][x] != 0) {
+                        } else  if (MultiMatrix.MULTI_MATRIX[x][j] != 0 && bloco.getMatrizEstado()[x][i] != 0) {
 
-                            value = (Galois.getGaloisEquivalent(((bloco.getMatrizEstado()[i][x] & 0xf0) >> 4), bloco.getMatrizEstado()[i][x] & 0x0f)
-                                    + Galois.getGaloisEquivalent(((MultiMatrix.MULTI_MATRIX[x][j] & 0xf0) >> 4), MultiMatrix.MULTI_MATRIX[x][j] & 0x0f));
+                            value = (LTable.get(((bloco.getMatrizEstado()[x][i] & 0xf0) >> 4), bloco.getMatrizEstado()[x][i] & 0x0f)
+                                    + LTable.get(((MultiMatrix.MULTI_MATRIX[j][x] & 0xf0) >> 4), MultiMatrix.MULTI_MATRIX[j][x] & 0x0f));
+
+                            if (value > 0xff){
+                                value = value - 0xff;
+                            }
+
+                            value = ETable.get(((value & 0xf0) >> 4), value & 0x0f);
                         }
 
-                        if (value > 0xff){
-                            value = 0xff;
-                        }
+                        auxToXor[x] = value;
 
-                        newMatrix[i][j] = value;
 
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
+
+                newMatrix[j][i] = auxToXor[0] ^ auxToXor[1] ^ auxToXor[2] ^ auxToXor[3];
             }
-            break;
         }
 
 
-        for (int i = 0; i < newMatrix.length; i++) {
-            for (int j = 0; j < newMatrix.length; j++) {
-                try {
-                    newMatrix[i][j] = ETable.getETableEquivalent(((newMatrix[i][j] & 0xf0) >> 4), newMatrix[i][j] & 0x0f);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        System.out.println("teste");
 
         bloco.setMatrizEstado(newMatrix);
 

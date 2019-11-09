@@ -19,7 +19,7 @@ public class ETable {
                 {0x39,0x4b,0xdd,0x7c,0x84,0x97,0xa2,0xfd,0x1c,0x24,0x6c,0xb4,0xc7,0x52,0xf6,0x01}
     };
 
-    public static int getETableEquivalent(int line, int column) throws IllegalAccessException {
+    public static int get(int line, int column) throws IllegalAccessException {
 
         return E_TABLE[line][column];
 
