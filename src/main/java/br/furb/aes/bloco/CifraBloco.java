@@ -51,8 +51,9 @@ public class CifraBloco {
 
         byte[] arrayFinal = new byte[blocks.size() * 16];
 
+        int x = 0;
+
         for (Block block: blocks) {
-            int x = 0;
             for (int i = 0; i < block.getMatrizEstado().length; i++) {
 
                 for (int j = 0; j < block.getMatrizEstado().length; j++) {
