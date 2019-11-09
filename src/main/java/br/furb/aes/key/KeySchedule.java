@@ -1,3 +1,5 @@
+package br.furb.br.furb.aes.key;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Delegate;

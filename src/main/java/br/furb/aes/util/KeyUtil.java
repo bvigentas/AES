@@ -1,3 +1,5 @@
+package br.furb.util;
+
 public class KeyUtil {
 
     /**

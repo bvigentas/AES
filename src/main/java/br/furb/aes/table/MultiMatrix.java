@@ -1,3 +1,5 @@
+package br.furb.table;
+
 public class MultiMatrix {
 
     public static final int[][] MULTI_MATRIX = {

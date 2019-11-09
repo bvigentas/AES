@@ -1,3 +1,5 @@
+package br.furb.table;
+
 public class LTable {
 
     private static final int[][] LTABLE = {

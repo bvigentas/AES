@@ -1,3 +1,7 @@
+package br.furb.br.furb.aes.key;
+
+import br.furb.table.SBox;
+import br.furb.util.ByteUtil;
 import lombok.Getter;
 import lombok.Setter;
 
