@@ -1,12 +1,11 @@
-package br.furb.br.furb.aes.bloco;
+package br.furb.aes.bloco;
 
-import br.furb.br.furb.aes.bloco.Block;
-import br.furb.br.furb.aes.key.KeySchedule;
-import br.furb.table.ETable;
-import br.furb.table.LTable;
-import br.furb.table.MultiMatrix;
-import br.furb.table.SBox;
-import br.furb.util.ByteUtil;
+import br.furb.aes.key.KeySchedule;
+import br.furb.aes.table.ETable;
+import br.furb.aes.table.LTable;
+import br.furb.aes.table.MultiMatrix;
+import br.furb.aes.table.SBox;
+import br.furb.aes.util.ByteUtil;
 import lombok.AllArgsConstructor;
 import lombok.Setter;
 

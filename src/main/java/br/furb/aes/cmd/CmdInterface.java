@@ -1,5 +1,8 @@
-import br.furb.util.ByteUtil;
-import br.furb.util.KeyUtil;
+package br.furb.aes.cmd;
+
+import br.furb.aes.AES;
+import br.furb.aes.util.ByteUtil;
+import br.furb.aes.util.KeyUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 

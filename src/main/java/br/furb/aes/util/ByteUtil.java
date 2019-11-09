@@ -1,4 +1,4 @@
-package br.furb.util;
+package br.furb.aes.util;
 
 public class ByteUtil {
 

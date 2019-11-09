@@ -1,4 +1,4 @@
-package br.furb.table;
+package br.furb.aes.table;
 
 public class LTable {
 

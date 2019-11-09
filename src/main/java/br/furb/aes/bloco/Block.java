@@ -1,4 +1,4 @@
-package br.furb.br.furb.aes.bloco;
+package br.furb.aes.bloco;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

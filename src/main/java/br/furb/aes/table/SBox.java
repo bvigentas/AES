@@ -1,4 +1,4 @@
-package br.furb.table;
+package br.furb.aes.table;
 
 import org.apache.commons.lang3.math.NumberUtils;
 

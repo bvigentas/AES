@@ -1,6 +1,8 @@
-import br.furb.br.furb.aes.bloco.CifraBloco;
-import br.furb.br.furb.aes.key.KeySchedule;
-import br.furb.br.furb.aes.key.RoundKey;
+package br.furb.aes;
+
+import br.furb.aes.bloco.CifraBloco;
+import br.furb.aes.key.KeySchedule;
+import br.furb.aes.key.RoundKey;
 import lombok.Getter;
 import lombok.Setter;
 

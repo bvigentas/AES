@@ -1,4 +1,4 @@
-package br.furb.br.furb.aes.key;
+package br.furb.aes.key;
 
 import lombok.Getter;
 import lombok.Setter;
