@@ -1,8 +1,8 @@
 public class KeyUtil {
 
-    public static byte[] getKeyFromString(String keyString) {
+    public static int[] getKeyFromString(String keyString) {
 
-        byte[] key = new byte[16];
+        int[] key = new int[16];
 
         String[] splitedKey = keyString.split(",");
 

@@ -14,7 +14,7 @@ public class CifraBloco {
     @Setter
     private KeySchedule keySchedule;
 
-    public List<Block> cifrar() {
+    public byte[] cifrar() {
 
         List<Block> blocos = quebraBloco();
         List<Block> blocoscifrados = new ArrayList<Block>();
@@ -35,7 +35,29 @@ public class CifraBloco {
             blocoscifrados.add(etapa05(bloco, 10));
         }
 
-        return blocoscifrados;
+        return uniteBlocks(blocoscifrados);
+
+    }
+
+    private byte[] uniteBlocks(List<Block> blocks) {
+
+        byte[] arrayFinal = new byte[blocks.size() * 16];
+
+        for (Block block: blocks) {
+            int x = 0;
+            for (int i = 0; i < block.getMatrizEstado().length; i++) {
+
+                for (int j = 0; j < block.getMatrizEstado().length; j++) {
+
+                    arrayFinal[x] = (byte) block.getMatrizEstado()[j][i];
+                    x++;
+                }
+
+            }
+
+        }
+
+        return arrayFinal;
 
     }
 
@@ -172,9 +194,6 @@ public class CifraBloco {
                 newMatrix[j][i] = auxToXor[0] ^ auxToXor[1] ^ auxToXor[2] ^ auxToXor[3];
             }
         }
-
-
-        System.out.println("teste");
 
         bloco.setMatrizEstado(newMatrix);
 
